@@ -11,7 +11,8 @@ import tempfile
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 FLAGS = None
- 
+old_v = tf.compat.v1.logging.get_verbosity()
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 def deepnn(x):
     with tf.name_scope('reshape'):
         x_image = tf.reshape(x, [-1, 28, 28, 1])
@@ -69,6 +70,7 @@ def bias_variable(shape):
  
 def main(_):
     # Import data
+    # print(_)
     mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
  
     # Create the model
@@ -113,7 +115,12 @@ def main(_):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str,
-                        default='/tmp/tensorflow/mnist/input_data',
+                        default='MNIST_data',
                         help='Directory for storing input data')
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+    # print([sys.argv[0]] + unparsed)
+    # print(sys.argv)
+    # print(FLAGS)
+    # print(unparsed)
+    tf.compat.v1.logging.set_verbosity(old_v)
