@@ -11,6 +11,11 @@ from keras import backend as K
 from keras.optimizers import SGD
 from keras import regularizers
 from keras.models import load_model
+from keras.utils import multi_gpu_model
+# 引用负责多GPU调用
+# import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2"
+# 这个方案不可行
 
 #import data
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -112,6 +117,8 @@ model.add(Dropout(rate = 1 - 0.5))
 model.add(Dense(10))
 model.add(Activation('softmax'))
 # 10
+model = multi_gpu_model(model,gpus = 3)
+# 调用3个GPU
 model.summary()
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd,metrics=['accuracy'])
